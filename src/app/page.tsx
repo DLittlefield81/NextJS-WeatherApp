@@ -2,6 +2,7 @@
 
 import Container from "@/components/Container";
 import Navbar from "@/components/Navbar";
+import WeatherIcon from "@/components/WeatherIcon";
 import { convertKelvinToCelsius } from "@/utils/convertKelvinToCelsius";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -73,7 +74,7 @@ export default function Home() {
     queryKey: ['repoData'],
     queryFn: async () => {
       const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=toronto&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=56`
+        `https://api.openweathermap.org/data/2.5/forecast?q=toronto&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=24`
       );
       return data;
     }
@@ -124,13 +125,30 @@ export default function Home() {
                   </span>
                 </p>
               </div>
+              {/* Time and weather icon */}
+              <div className="flex gap-10 sm:gap-15 overflow-x-auto w-full justify-between pr-3">
+                {data?.list.map((d, i) =>(
+                  <div key={i}
+                  className="flex flex-col justify-between gap-2 items-center text-xs font-semibold">
+                    <p className="whitespace-nowrap">
+                      {format(parseISO(d.dt_txt), 'h:mm a')}
+                    </p>
+                    <WeatherIcon iconName={d.weather[0].icon } />
+                    <p>
+                      {convertKelvinToCelsius(d?.main.temp ?? 0)}&deg;
+                    </p>
+                  </div>
+                ))}
+              </div>
             </Container>
 
           </div>
         </section>
         {/* 7 Day Data */}
-        <section>
-
+        <section className="flex w-full flex-col gap-4">
+          <p className="text-2xl">
+            Forecast (7 days)
+          </p>
         </section>
       </main>
     </div>
