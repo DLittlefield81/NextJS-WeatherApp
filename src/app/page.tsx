@@ -1,9 +1,11 @@
 'use client'
 
 import Container from "@/components/Container";
+import ForecastWeatherDetail from "@/components/ForecastWeatherDetail";
 import Navbar from "@/components/Navbar";
 import WeatherIcon from "@/components/WeatherIcon";
 import { convertKelvinToCelsius } from "@/utils/convertKelvinToCelsius";
+import { getDayOrNightIcon } from "@/utils/getDayOrNightIcon";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { format, fromUnixTime, parseISO } from "date-fns";
@@ -133,7 +135,7 @@ export default function Home() {
                     <p className="whitespace-nowrap">
                       {format(parseISO(d.dt_txt), 'h:mm a')}
                     </p>
-                    <WeatherIcon iconName={d.weather[0].icon } />
+                    <WeatherIcon iconName={getDayOrNightIcon(d.weather[0].icon, d.dt_txt )} />
                     <p>
                       {convertKelvinToCelsius(d?.main.temp ?? 0)}&deg;
                     </p>
@@ -141,7 +143,20 @@ export default function Home() {
                 ))}
               </div>
             </Container>
+          </div>
+          <div className="flex gap-4">
+            {/* left */}
+            <Container className="w-fit justify-center flex-col px-4 items-center">
+              <p className="capitalize text-center">
+                { firstData?.weather[0].description}
+              </p>
+              <WeatherIcon iconName={getDayOrNightIcon(firstData.weather[0].icon ?? "", firstData.dt_txt ?? "")} />
 
+            </Container>
+            {/* right */}
+            <Container>
+
+            </Container>
           </div>
         </section>
         {/* 7 Day Data */}
@@ -149,6 +164,7 @@ export default function Home() {
           <p className="text-2xl">
             Forecast (7 days)
           </p>
+          <ForecastWeatherDetail />
         </section>
       </main>
     </div>
