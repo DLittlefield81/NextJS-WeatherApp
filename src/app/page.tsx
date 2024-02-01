@@ -3,9 +3,12 @@
 import Container from "@/components/Container";
 import ForecastWeatherDetail from "@/components/ForecastWeatherDetail";
 import Navbar from "@/components/Navbar";
+import WeatherDetails from "@/components/WeatherDetails";
 import WeatherIcon from "@/components/WeatherIcon";
 import { convertKelvinToCelsius } from "@/utils/convertKelvinToCelsius";
+import { convertWindSpeed } from "@/utils/convertWindSpeed";
 import { getDayOrNightIcon } from "@/utils/getDayOrNightIcon";
+import { metersToKilometers } from "@/utils/metersToKilometers";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { format, fromUnixTime, parseISO } from "date-fns";
@@ -129,13 +132,13 @@ export default function Home() {
               </div>
               {/* Time and weather icon */}
               <div className="flex gap-10 sm:gap-15 overflow-x-auto w-full justify-between pr-3">
-                {data?.list.map((d, i) =>(
+                {data?.list.map((d, i) => (
                   <div key={i}
-                  className="flex flex-col justify-between gap-2 items-center text-xs font-semibold">
+                    className="flex flex-col justify-between gap-2 items-center text-xs font-semibold">
                     <p className="whitespace-nowrap">
                       {format(parseISO(d.dt_txt), 'h:mm a')}
                     </p>
-                    <WeatherIcon iconName={getDayOrNightIcon(d.weather[0].icon, d.dt_txt )} />
+                    <WeatherIcon iconName={getDayOrNightIcon(d.weather[0].icon, d.dt_txt)} />
                     <p>
                       {convertKelvinToCelsius(d?.main.temp ?? 0)}&deg;
                     </p>
@@ -144,18 +147,38 @@ export default function Home() {
               </div>
             </Container>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mt-5">
             {/* left */}
             <Container className="w-fit justify-center flex-col px-4 items-center">
               <p className="capitalize text-center">
-                { firstData?.weather[0].description}
+                {firstData?.weather[0].description}
               </p>
-              <WeatherIcon iconName={getDayOrNightIcon(firstData.weather[0].icon ?? "", firstData.dt_txt ?? "")} />
+              <WeatherIcon
+                iconName={getDayOrNightIcon(
+                  firstData.weather[0].icon ?? "",
+                  firstData.dt_txt ?? ""
+                )}
+              />
 
             </Container>
             {/* right */}
-            <Container>
-
+            <Container className="bg-yellow-300/80  px-6 gap-4 justify-between overflow-x-auto">
+              <WeatherDetails
+                visability={metersToKilometers(
+                  firstData?.visibility ?? 10000
+                )}
+                airPressure={`${firstData?.main.pressure} hPa`}
+                humidity={`${firstData?.main.humidity}%`}
+                sunrise={format(
+                  fromUnixTime(data?.city.sunrise ?? 1702949452),
+                  "H:mm"
+                )}
+                sunset={format(
+                  fromUnixTime(data?.city.sunset ?? 1702517657),
+                  "H:mm"
+                )}
+                windSpeed={convertWindSpeed(firstData?.wind.speed ?? 1.64)}
+              />
             </Container>
           </div>
         </section>
