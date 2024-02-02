@@ -79,7 +79,7 @@ export default function Home() {
     queryKey: ['repoData'],
     queryFn: async () => {
       const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=toronto&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=24`
+        `https://api.openweathermap.org/data/2.5/forecast?q=toronto&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=56`
       );
       return data;
     }
@@ -185,7 +185,7 @@ export default function Home() {
             {/* right */}
             <Container className="bg-yellow-300/80  px-6 gap-4 justify-between overflow-x-auto">
               <WeatherDetails
-                visability={metersToKilometers(
+                visibility={metersToKilometers(
                   firstData?.visibility ?? 10000
                 )}
                 airPressure={`${firstData?.main.pressure} hPa`}
@@ -215,10 +215,10 @@ export default function Home() {
               weatherIcon={d?.weather[0].icon ?? "01d"}
               date={format(parseISO(d?.dt_txt ?? ''), "dd.MM")}
               day={format(parseISO(d?.dt_txt ?? ''), "EEEE")}
-              feels_like={d?.weather[0].feels_like ?? 0}
-              temp={d?.weather[0].temp ?? 0}
-              temp_max={d?.weather[0].temp_max ?? 0}
-              temp_min={d?.weather[0].temp_min ?? 0}
+              feels_like={d?.main.feels_like ?? 0}
+              temp={d?.main.temp ?? 0}
+              temp_max={d?.main.temp_max ?? 0}
+              temp_min={d?.main.temp_min ?? 0}
               airPressure={`${d?.main.pressure} hPa`}
               humidity={`${d?.main.humidity} %`}
               sunrise={format(
@@ -229,7 +229,7 @@ export default function Home() {
                 fromUnixTime(data?.city.sunset ?? 1702517657),
                 "H:mm"
               )}
-              visability={`${metersToKilometers(d?.visability ?? 10000)}`}
+              visibility={`${metersToKilometers(d?.visibility ?? 10000)}`}
               windSpeed={`${convertWindSpeed(d?.wind.speed ?? 1.64)}`}
 
             />

@@ -5,7 +5,7 @@ import { MdAir } from "react-icons/md";
 import { ImMeter } from "react-icons/im";
 
 export interface WeatherDetailProps {
-    visability: string;
+    visibility: string;
     humidity: string;
     windSpeed: string;
     airPressure: string;
@@ -15,7 +15,7 @@ export interface WeatherDetailProps {
 
 export default function WeatherDetails(props: WeatherDetailProps) {
     const {
-        visability = "25km",
+        visibility = "25km",
         humidity = "61%",
         windSpeed = "7 km/h",
         airPressure = "1012 hPa",
@@ -27,8 +27,8 @@ export default function WeatherDetails(props: WeatherDetailProps) {
         <>
             <SingleWeatherDetail
                 icon={<LuEye />}
-                information="Visability"
-                value={visability}
+                information="visibility"
+                value={visibility}
             />
             <SingleWeatherDetail
                 icon={<FiDroplet />}
